@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { compose, lifecycle } from 'recompose';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Col, Grid, Row } from 'react-bootstrap';
@@ -36,42 +37,24 @@ const mapDispatchToProps = (dispatch) => {
   }, dispatch);
 };
 
-class Interface extends Component {
+const  Interface = (props) => {
 
-  componentDidMount = () => {
-    let returnObj;
-    this.props.renderNavBar(); // this currently does NOTHING
-    if (window.location.href.indexOf('?') !== -1) {
-      const temp = decodeURIComponent(window.location.href.substring(window.location.href.indexOf('?') + 1));
-      const cutTemp = temp.substring(0, temp.length - 1);
-      returnObj = JSON.parse(cutTemp);
-
-      localStorage.setItem('token', returnObj.token);
-      localStorage.setItem('userId', returnObj.id);
-      localStorage.setItem('firstName', returnObj.first_name);
-      localStorage.setItem('lastName', returnObj.last_name);
-      localStorage.setItem('email', returnObj.email);
-      localStorage.setItem('profile_picture', returnObj.profile_picture);
-    }
-  }
-
-  onExit = () => {
-    if (!this.props.introTriggered) {
-      this.props.introTriggeredAction();
-      this.props.toggleSteps();
+  const onExit = () => {
+    if (!props.introTriggered) {
+      props.introTriggeredAction();
+      props.toggleSteps();
     }
   }
 
 
-  render() {
     return (
       <div id="keyboardBackground">
         <Grid>
           <Steps
-            enabled={this.props.stepsEnabled}
-            steps={this.props.steps}
-            initialStep={this.props.initialStep}
-            onExit={this.onExit}
+            enabled={props.stepsEnabled}
+            steps={props.steps}
+            initialStep={props.initialStep}
+            onExit={onExit}
             options={introOptions}
           />
           <Row id="interface-top-row" className="show-grid">
@@ -105,7 +88,26 @@ class Interface extends Component {
         </Grid>
       </div>
     );
-  }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Interface);
+const onDidMount = lifecycle({
+  componentDidMount(){
+    let returnObj;
+    console.log('did i get here');
+    this.props.renderNavBar(); // this currently does NOTHING
+    if (window.location.href.indexOf('?') !== -1) {
+      const temp = decodeURIComponent(window.location.href.substring(window.location.href.indexOf('?') + 1));
+
+      const cutTemp = temp.substring(0, temp.length - 1);
+      returnObj = JSON.parse(cutTemp);
+      localStorage.setItem('token', returnObj.token);
+      localStorage.setItem('userId', returnObj.id);
+      localStorage.setItem('firstName', returnObj.first_name);
+      localStorage.setItem('lastName', returnObj.last_name);
+      localStorage.setItem('email', returnObj.email);
+      localStorage.setItem('profile_picture', returnObj.profile_picture);
+    }
+  },
+})
+
+export default compose(connect(mapStateToProps, mapDispatchToProps), onDidMount)(Interface);
