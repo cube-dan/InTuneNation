@@ -52,6 +52,12 @@ class Profile extends Component {
     };
     this.profilePic;
   }
+  // componentWillUpdate = (oldProps, newProps) =>{
+  //   if(oldProps !== newProps) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   componentDidMount = () => {
     const token = localStorage.getItem('token');

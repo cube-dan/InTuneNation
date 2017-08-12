@@ -16,7 +16,9 @@ const mapStateToProps = (state) => {
   }; };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ logUserIn, postLogIn, localStorageLogin, setAllPastExercises }, dispatch); };
+  return bindActionCreators({ logUserIn, postLogIn, localStorageLogin, setAllPastExercises }, dispatch);
+};
+
 
 class LogIn extends Component {
 
@@ -55,7 +57,7 @@ class LogIn extends Component {
     window.location.assign('https://ppp-capstone-music.herokuapp.com/auth/google/');
   }
   render() {
-    const { handleSubmit, pristine, reset, submitting } = this.props;
+    const { handleSubmit } = this.props;
 
 
     return (
